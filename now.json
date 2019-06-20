@@ -1,0 +1,9 @@
+{
+  "name": "instaclone-api",
+  "alias": "instaclone-api",
+  "version": 2,
+  "builds": [{ "src": "**/*.js", "use": "@now/node" }],
+  "env": {
+    "MONGODB_URI": "@instaclone-mongodb-uri"
+  }
+}
