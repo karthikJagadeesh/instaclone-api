@@ -6,7 +6,8 @@
   "routes": [{ "src": "^/(.*)", "dest": "/api/app.js" }],
   "env": {
     "MONGODB_URI": "@instaclone-mongodb-uri",
-    "PORT": "@instaclone-port"
+    "PORT": "@instaclone-port",
+    "SECRET": "@instaclone-secret"
   },
   "github": {
     "silent": true

@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
+const signupRouter = require('./controllers/signup');
 
 const middleware = require('./utils/middlewares');
 const config = require('./utils/config');
@@ -18,12 +19,12 @@ mongoose
   .catch(error => console.error('Error connecting to MongoDB:', error.message));
 
 app.use(cors());
-app.use(express.static('build'));
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
+app.use('/signup', signupRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
