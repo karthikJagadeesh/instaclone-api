@@ -6,7 +6,35 @@ const userSchema = new Schema({
   fullName: String,
   userName: String,
   email: String,
-  password: String
+  password: String,
+  posts: {
+    type: Number,
+    default: 0
+  },
+  bio: {
+    type: String,
+    default: ''
+  },
+  website: {
+    type: String,
+    default: ''
+  },
+  followers: {
+    type: Number,
+    default: 0
+  },
+  following: {
+    type: Number,
+    default: 0
+  },
+  phoneNumber: {
+    type: String,
+    default: ''
+  },
+  profileImageUrl: {
+    type: String,
+    default: ''
+  }
 });
 
 userSchema.set('toJSON', {
