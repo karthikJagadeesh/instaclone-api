@@ -7,7 +7,10 @@
   "env": {
     "MONGODB_URI": "@instaclone-mongodb-uri",
     "PORT": "@instaclone-port",
-    "SECRET": "@instaclone-secret"
+    "SECRET": "@instaclone-secret",
+    "CLOUDINARY_NAME": "@instaclone-cloudinary-name",
+    "CLOUDINARY_KEY": "@instaclone-cloudinary-key",
+    "CLOUDINARY_SECRET": "@instaclone-cloudinary-secret"
   },
   "github": {
     "silent": true
