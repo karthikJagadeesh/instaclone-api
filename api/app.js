@@ -9,6 +9,7 @@ const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const signupRouter = require('./controllers/signup');
 const changeProfilePicRouter = require('./controllers/changeProfilePic');
+const postRouter = require('./controllers/post');
 
 const middleware = require('./utils/middlewares');
 const config = require('./utils/config');
@@ -34,6 +35,7 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
 app.use('/change-profile-pic', changeProfilePicRouter);
+app.use('/post', postRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
