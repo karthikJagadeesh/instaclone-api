@@ -57,8 +57,7 @@ async function handlePostRoute(request, response) {
             id,
             userName,
             profileImageUrl
-          },
-          postedAt: new Date()
+          }
         };
         await Post.create(model);
         response.status(201).json({ message: 'Post shared.' });

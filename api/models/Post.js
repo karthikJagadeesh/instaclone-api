@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
 
+const User = require('./User');
+
+const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
@@ -20,7 +22,23 @@ const postSchema = new Schema({
     profileImageUrl: String,
     userName: String
   },
-  postedAt: Date
+  postedAt: Date,
+  updatedAt: Date
+});
+
+postSchema.pre('save', async function() {
+  const now = new Date();
+  if (!this.postedAt) {
+    this.postedAt = now;
+    const user = await User.findById(this.owner.id);
+    await user.update({ posts: user.posts + 1 });
+  }
+  this.updatedAt = now;
+});
+
+postSchema.post('remove', async function() {
+  const user = await User.findById(this.owner.id);
+  user.update({ posts: user.posts - 1 });
 });
 
 postSchema.set('toJSON', {
