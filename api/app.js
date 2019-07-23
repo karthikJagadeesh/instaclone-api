@@ -11,6 +11,7 @@ const signupRouter = require('./controllers/signup');
 const changeProfilePicRouter = require('./controllers/changeProfilePic');
 const postRouter = require('./controllers/post');
 const profilePostsRouter = require('./controllers/profilePosts');
+const feedRouter = require('./controllers/feed');
 
 const middleware = require('./utils/middlewares');
 const config = require('./utils/config');
@@ -29,6 +30,7 @@ cloudinary.config({
 });
 
 app.use(cors());
+app.options('*', cors());
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 
@@ -38,6 +40,7 @@ app.use('/signup', signupRouter);
 app.use('/change-profile-pic', changeProfilePicRouter);
 app.use('/post', postRouter);
 app.use('/profile-posts', profilePostsRouter);
+app.use('/feed', feedRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
