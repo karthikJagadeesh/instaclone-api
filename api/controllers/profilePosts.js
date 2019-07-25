@@ -2,8 +2,8 @@ const profilePostsRouter = require('express').Router();
 
 const Post = require('../models/Post');
 
-profilePostsRouter.get('/', async (request, response) => {
-  const id = request.get('x-instaclone-userId');
+profilePostsRouter.get('/:id', async (request, response) => {
+  const id = request.params.id;
 
   try {
     const data = await Post.find({ 'owner.id': id }).sort({ postedAt: -1 });
