@@ -14,7 +14,10 @@ usersRouter.get('/', async (_, response) => {
 usersRouter.get('/:id', async (request, response) => {
   const _id = request.params.id;
   try {
-    const data = await User.findById(_id, '-password');
+    const data = await User.findById(
+      _id,
+      '-password -followingList -followersList'
+    );
     response.status(200).json({ data });
   } catch (error) {
     console.error(error);
