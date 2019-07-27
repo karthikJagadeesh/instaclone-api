@@ -23,9 +23,17 @@ const userSchema = new Schema({
     type: Number,
     default: 0
   },
+  followersList: {
+    type: Array,
+    default: []
+  },
   following: {
     type: Number,
     default: 0
+  },
+  followingList: {
+    type: Array,
+    default: []
   },
   phoneNumber: {
     type: String,
@@ -35,6 +43,11 @@ const userSchema = new Schema({
     type: String,
     default: ''
   }
+});
+
+userSchema.post('save', async function() {
+  this.followers = this.followersList.length;
+  this.following = this.followingList.length;
 });
 
 userSchema.set('toJSON', {

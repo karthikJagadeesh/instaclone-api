@@ -13,6 +13,7 @@ const postRouter = require('./controllers/post');
 const profilePostsRouter = require('./controllers/profilePosts');
 const feedRouter = require('./controllers/feed');
 const friendRouter = require('./controllers/friend');
+const friendshipRouter = require('./controllers/friendship');
 
 const middleware = require('./utils/middlewares');
 const config = require('./utils/config');
@@ -42,6 +43,7 @@ app.use('/change-profile-pic', changeProfilePicRouter);
 app.use('/post', postRouter);
 app.use('/profile-posts', profilePostsRouter);
 app.use('/feed', feedRouter);
+app.use('/friendship', friendshipRouter);
 app.use('/', friendRouter);
 
 app.use(middleware.unknownEndpoint);
