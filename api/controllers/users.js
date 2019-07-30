@@ -1,5 +1,6 @@
 const usersRouter = require('express').Router();
 const bcrypt = require('bcrypt');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const User = require('../models/User');
 
@@ -12,12 +13,28 @@ usersRouter.get('/', async (_, response) => {
 });
 
 usersRouter.get('/:id', async (request, response) => {
-  const _id = request.params.id;
+  const id = request.params.id;
   try {
-    const data = await User.findById(
-      _id,
-      '-password -followingList -followersList'
-    );
+    const result = await User.aggregate([
+      { $match: { _id: ObjectId(id) } },
+      {
+        $addFields: {
+          id: '$_id',
+          followers: { $size: '$followersList' },
+          following: { $size: '$followingList' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          __v: 0,
+          followersList: 0,
+          followingList: 0,
+          password: 0
+        }
+      }
+    ]).exec();
+    const data = result[0];
     response.status(200).json({ data });
   } catch (error) {
     console.error(error);

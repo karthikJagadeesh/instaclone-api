@@ -13,6 +13,8 @@ friendRouter.get('/:userName', async (request, response) => {
         $addFields: {
           ownerIsFollowing: { $in: [ownerId, '$followersList'] },
           isFollowingOwner: { $in: [ownerId, '$followingList'] },
+          followers: { $size: '$followersList' },
+          following: { $size: '$followingList' },
           id: '$_id'
         }
       },
