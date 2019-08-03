@@ -72,6 +72,41 @@ async function handlePostRoute(request, response) {
   }
 }
 
+async function handleLikeRoute(request, response) {
+  const ownerId = request.get('x-instaclone-userId');
+  const postId = request.params.id;
+
+  try {
+    const post = await Post.findById(postId);
+    await post.update({ likesList: [...post.likesList, ownerId] });
+    response.status(201).json({ status: 'ok' });
+  } catch (error) {
+    console.error(error);
+    response
+      .status(500)
+      .json({ status: 'error', error: 'Internal server error' });
+  }
+}
+
+async function handleUnlikeRoute(request, response) {
+  const ownerId = request.get('x-instaclone-userId');
+  const postId = request.params.id;
+
+  try {
+    const post = await Post.findById(postId);
+    const updater = post.likesList.filter(id => id !== ownerId);
+    await post.update({ likesList: updater });
+    response.status(201).json({ status: 'ok' });
+  } catch (error) {
+    console.error(error);
+    response
+      .status(500)
+      .json({ status: 'error', error: 'Internal server error' });
+  }
+}
+
 postRouter.post('/', upload, handlePostRoute);
+postRouter.post('/:id/like', handleLikeRoute);
+postRouter.post('/:id/unlike', handleUnlikeRoute);
 
 module.exports = postRouter;

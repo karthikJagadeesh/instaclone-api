@@ -39,8 +39,15 @@ feedRouter.get('/', async (request, response) => {
         $match: { 'owner.id': { $in: [id, ...followingList] } }
       },
       { $sort: { postedAt: -1 } },
-      { $addFields: { id: '$_id' } },
-      { $project: { _id: 0, __v: 0 } },
+      {
+        $addFields: {
+          id: '$_id',
+          likes: { $size: '$likesList' },
+          comments: { $size: '$commentsList' },
+          ownerHasLiked: { $in: [id, '$likesList'] }
+        }
+      },
+      { $project: { _id: 0, __v: 0, likesList: 0, commentsList: 0 } },
       { $limit: 5 }
     ]).exec();
     response.status(200).json({ data });

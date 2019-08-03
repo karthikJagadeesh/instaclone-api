@@ -9,13 +9,13 @@ const postSchema = new Schema({
   _id: ObjectId,
   caption: String,
   imageUrl: String,
-  likes: {
-    type: Number,
-    default: 0
+  likesList: {
+    type: Array,
+    default: []
   },
-  comments: {
-    type: Number,
-    default: 0
+  commentsList: {
+    type: Array,
+    default: []
   },
   owner: {
     id: String,
