@@ -18,7 +18,7 @@ feedRouter.get('/suggestions', async (request, response) => {
       },
       { $sort: { posts: -1, followers: -1 } },
       { $project: { fullName: 1, userName: 1, profileImageUrl: 1 } },
-      { $addFields: { following: false, id: '$_id' } },
+      { $addFields: { ownerIsFollowing: false, id: '$_id' } },
       { $project: { _id: 0 } },
       { $limit: 12 }
     ]).exec();

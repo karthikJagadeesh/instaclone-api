@@ -23,7 +23,7 @@ friendshipRouter.post('/:id', async (request, response) => {
       await friend.update(friendUpdater);
       response
         .status(200)
-        .json({ status: 'ok', following: true })
+        .json({ status: 'ok', ownerIsFollowing: true })
         .end();
     }
 
@@ -44,7 +44,7 @@ friendshipRouter.post('/:id', async (request, response) => {
 
       response
         .status(200)
-        .json({ status: 'ok', following: false })
+        .json({ status: 'ok', ownerIsFollowing: false })
         .end();
     }
   } catch (error) {

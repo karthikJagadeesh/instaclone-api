@@ -10,6 +10,47 @@ const User = require('../models/User');
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).any();
 
+postRouter.post('/', upload, handlePostRoute);
+postRouter.post('/:id/like', handleLikeRoute);
+postRouter.post('/:id/unlike', handleUnlikeRoute);
+postRouter.get('/:id/likes', handleLikesRoute);
+
+async function handleLikesRoute(request, response) {
+  const id = request.params.id;
+  const ownerId = request.get('x-instaclone-userId');
+
+  try {
+    const post = await Post.findById(id);
+    const likesList = post.likesList.map(id => ObjectId(id));
+    const data = await User.aggregate([
+      { $match: { _id: { $in: likesList } } },
+      {
+        $addFields: {
+          id: '$_id',
+          ownerIsFollowing: { $in: [ownerId, '$followersList'] },
+          isFollowingOwner: { $in: [ownerId, '$followingList'] },
+          isOwner: { $eq: ['$_id', ObjectId(ownerId)] }
+        }
+      },
+      {
+        $project: {
+          id: 1,
+          userName: 1,
+          fullName: 1,
+          profileImageUrl: 1,
+          ownerIsFollowing: 1,
+          isFollowingOwner: 1,
+          isOwner: 1
+        }
+      }
+    ]).exec();
+    response.status(200).json({ data });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 async function handlePostRoute(request, response) {
   const id = request.get('x-instaclone-userId');
   const {
@@ -104,9 +145,5 @@ async function handleUnlikeRoute(request, response) {
       .json({ status: 'error', error: 'Internal server error' });
   }
 }
-
-postRouter.post('/', upload, handlePostRoute);
-postRouter.post('/:id/like', handleLikeRoute);
-postRouter.post('/:id/unlike', handleUnlikeRoute);
 
 module.exports = postRouter;
