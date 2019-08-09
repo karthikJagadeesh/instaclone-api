@@ -10,10 +10,26 @@ const User = require('../models/User');
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).any();
 
-postRouter.post('/', upload, handlePostRoute);
+postRouter.post('/', upload, handleUploadPostRoute);
 postRouter.post('/:id/like', handleLikeRoute);
 postRouter.post('/:id/unlike', handleUnlikeRoute);
 postRouter.get('/:id/likes', handleLikesRoute);
+postRouter.delete('/:id', handleDeletePostRoute);
+
+async function handleDeletePostRoute(request, response) {
+  const ownerId = request.get('x-instaclone-userId');
+  const id = request.params.id;
+
+  try {
+    await Post.remove({ _id: ObjectId(id), 'owner.id': ownerId });
+    cloudinary.uploader.destroy(`posts/_${ownerId}_/_${id}_`, _ => {
+      response.status(200).json({ status: 'ok', message: 'Deleted the post.' });
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Error while deleting the post' });
+  }
+}
 
 async function handleLikesRoute(request, response) {
   const id = request.params.id;
@@ -51,7 +67,7 @@ async function handleLikesRoute(request, response) {
   }
 }
 
-async function handlePostRoute(request, response) {
+async function handleUploadPostRoute(request, response) {
   const id = request.get('x-instaclone-userId');
   const {
     body: { caption, imageCropOptions },

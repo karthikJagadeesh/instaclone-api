@@ -36,9 +36,10 @@ postSchema.pre('save', async function() {
   this.updatedAt = now;
 });
 
-postSchema.post('remove', async function() {
-  const user = await User.findById(this.owner.id);
-  user.update({ posts: user.posts - 1 });
+postSchema.pre('remove', { query: true }, async function() {
+  const id = this.getQuery()['owner.id'];
+  const user = await User.findById(id);
+  await user.update({ posts: user.posts - 1 });
 });
 
 postSchema.set('toJSON', {
