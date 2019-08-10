@@ -109,4 +109,50 @@ usersRouter.put('/change/password/', async (request, response) => {
   }
 });
 
+usersRouter.get('/:id/following', async (request, response) => {
+  const id = request.params.id;
+  const ownerId = request.get('x-instaclone-userId');
+
+  try {
+    const user = await User.findById(id);
+    const followingList = user.followingList.map(id => ObjectId(id));
+    const data = await User.aggregate([
+      { $match: { _id: { $in: followingList } } },
+      {
+        $addFields: {
+          id: '$_id',
+          ownerIsFollowing: { $in: [ownerId, '$followersList'] },
+          isFollowingOwner: { $in: [ownerId, '$followingList'] },
+          isOwner: { $eq: ['$_id', ObjectId(ownerId)] }
+        }
+      },
+      {
+        $project: {
+          id: 1,
+          userName: 1,
+          fullName: 1,
+          profileImageUrl: 1,
+          ownerIsFollowing: 1,
+          isFollowingOwner: 1,
+          isOwner: 1
+        }
+      }
+    ]).exec();
+    if (data.length > 0) {
+      response
+        .status(200)
+        .json({ status: 'ok', data })
+        .end();
+    } else {
+      response
+        .status(200)
+        .json({ status: 'failed' })
+        .end();
+    }
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = usersRouter;
